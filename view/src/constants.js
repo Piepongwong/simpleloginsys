@@ -1,0 +1,8 @@
+
+export const AUTHORIZE = "AUTHORIZE"
+
+export const IS_AUTHENTICATING = "IS_AUTHENTICATING"
+
+export const INVALID_LOGIN = "INVALID_LOGIN"
+ 
+export const LOGGED_IN = "LOGGED_IN"

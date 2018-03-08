@@ -3,11 +3,57 @@ const express = require("express"),
  app = express(),
  {Pool} = require("pg"),
  bodyParser = require('body-parser')
+ model = require("./models/index")
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
 
-/*const controllers = require("./controllers/index")(pool)
-*/
-app.use(bodyParser.urlencoded({ extended: false }))
-app.set("PORT", 3008)
+var cors = require('cors')
+
+app.use(cors())
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+  	model.user.login(username, password)
+  	.then((lres)=> {
+  		if(lres) return done(null, lres)
+  		else if(!lres) return done(null, false, {message: "incorrect credentials"})
+  	})
+  }
+));
+passport.serializeUser(function(user, done) {
+  console.log("hi")
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+	console.log("hi")
+  done(err, user);
+});
+
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json()) 
+app.use(require('cookie-parser')());
+app.use(require('express-session')({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+
+app.set("PORT", process.env.WEBSERVERPORT)
+
+app.post('/login',
+  passport.authenticate('local'), (req, res)=> {
+  		console.log(req.user)
+  		res.send("HOOORAY")
+  }
+)
+
+require("./routes/index")(app)
+
+
+// ** Dev only ** //
+
 
 
 app.use("/admin", function (req, res, next) {
@@ -21,3 +67,4 @@ app.listen(app.get("PORT"), ()=> {
 	console.log("Listening at", app.get("PORT"))
 })
 
+module.export = app

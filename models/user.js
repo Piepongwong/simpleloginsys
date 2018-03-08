@@ -1,22 +1,26 @@
 var bcrypt = require('bcrypt');
 
 module.exports = (pool)=> {
-
-	pool.query(`CREATE TABLE IF NOT EXISTS public.users
-		(
-		    username text COLLATE pg_catalog."default",
-		    firstname text COLLATE pg_catalog."default",
-		    lastname text COLLATE pg_catalog."default",
-		    email text COLLATE pg_catalog."default",
-		    password text COLLATE pg_catalog."default",
-		    id serial primary key NOT NULL
-		)`
-	)
-	.catch((err)=> {
-		throw err
-	})		
-
+	
 	return {
+		init: (function(pool) {
+			console.log("User model initialized")
+			return ()=> {
+				pool.query(`CREATE TABLE IF NOT EXISTS public.users
+				(
+				    username text COLLATE pg_catalog."default",
+				    firstname text COLLATE pg_catalog."default",
+				    lastname text COLLATE pg_catalog."default",
+				    email text COLLATE pg_catalog."default",
+				    password text COLLATE pg_catalog."default",
+				    id serial primary key NOT NULL
+				)`
+				)
+				.catch((err)=> {
+					throw err
+				})					
+			}
+		})(pool),
 		exists: (function(pool){
 			return function(usernameOrEmail) {
 				return pool.query(`SELECT * FROM users WHERE username = '${usernameOrEmail}' OR email = '${usernameOrEmail}';`)
@@ -25,7 +29,6 @@ module.exports = (pool)=> {
 					else return false
 				})
 			}
-
 		})(pool),
 		create: (function(pool){
 				return function(username, firstname, lastname, email, password){
@@ -47,15 +50,14 @@ module.exports = (pool)=> {
 						})		
 					}).catch((err)=> {
 						console.log(err)
-					})
-							
+					})			
 			}
 		})(pool),
 		login: (function(pool) {
 				return function(usernameOrEmail, password) {
 					return pool.query(`SELECT * FROM users WHERE username = '${usernameOrEmail}' OR email = '${usernameOrEmail}';`)
 						.then((pres)=> {
-							if(pres.rows.lenght === 0) return false
+							if(pres.rows.length === 0) return false
 							return bcrypt.compare(password, pres.rows[0].password)
 							.then((bres)=> {
 								if(bres) {
@@ -70,5 +72,3 @@ module.exports = (pool)=> {
 		})(pool)
 	}
 }
-
-
