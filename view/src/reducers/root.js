@@ -1,5 +1,6 @@
 import {combineReducers} from "redux"
 import {AUTHORIZE, INVALID_LOGIN, LOGGED_IN} from "../constants"
+
 const root = combineReducers({
 	session,
 })
@@ -29,3 +30,4 @@ function session (
 			return state
 	}
 }
+
