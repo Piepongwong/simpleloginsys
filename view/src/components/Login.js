@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from 'react-redux'
-import {authorize} from "../actions/root"
-import { Button, Container, Form, FormGroup, Label, Input, FormText, Row, Col } from 'reactstrap'
+import {authorize, authorizeFB} from "../actions/root"
+import { Button, Container, Form, FormGroup, Label, Input, FormText, Row, Col, FormFeedback} from 'reactstrap'
 import FacebookLogin from 'react-facebook-login'
 import { withRouter } from 'react-router-dom'
 import { Link } from 'react-router-dom'
@@ -19,7 +19,7 @@ class LoginUnconnected extends React.Component {
 		super(props)
 		this.state = {
 			username: "",
-			password: ""
+			password: ""		
 		}
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.handleChange = this.handleChange.bind(this)
@@ -33,9 +33,7 @@ class LoginUnconnected extends React.Component {
 		e.preventDefault()
 		this.setState({[e.target.name]: e.target.value})
 	}
-	responseFacebook(res) {
-		console.log(res)
-	}
+
 	render () {
 		return (
 			<div  className="vertical-center container">
@@ -45,21 +43,29 @@ class LoginUnconnected extends React.Component {
 					<hr />
 					<Form onSubmit={this.handleSubmit}>
 						<FormGroup >
-		         			<Label for="username">Password</Label>				
+		         			<Label for="username">Username or email</Label>				
 							<Input required onChange={this.handleChange} name="username" value={this.state.username} placeholder="username or email"/>
 						</FormGroup>
 						<FormGroup >
-							<Label for="password">Password</Label>				
-							<Input required onChange={this.handleChange} name="password" type="password" value={this.state.password} placeholder="password"/>
+							<Label for="password">Password</Label>
+							<Input required onChange={this.handleChange} name="password" type="password" value={this.state.password} placeholder="password"/>	
 						</FormGroup>
-						<Button className="w-50" type="submit" value="submit">Submit </Button>												
+						<FormGroup>
+							{this.props.invalidLogin?
+							<div> 
+								<Input invalid className="w-50 btn btn-secondary" type="submit" value="submit"/>
+								<FormFeedback>Wrong username or password</FormFeedback>
+							</div>:
+								<Input className="w-50 btn btn-secondary" type="submit" value="submit"/>
+							}
+						</FormGroup>
 					</Form>
 					<p className="p-2 mb-0"> or</p>
 					<FacebookLogin style={{backgroundColor: "blue"}} cssClass={"kep-login-facebook btn w-100 m5"}
 						appId="411672582610628"
 						autoLoad="true"
-						fields="name, email, picture"
-						callback={this.responseFacebook}
+						fields="first_name, last_name, email, picture"
+						callback={this.props.authorizeFB}
 						icon="fa-facebook"
 					/>
 					<hr />
@@ -75,16 +81,25 @@ class LoginUnconnected extends React.Component {
 		)
 	}
 }
+const mapStateToProps = state => {
+  return {
+    invalidLogin: state.session.invalidLogin
+  }
+}
 
 const mappDispatchToProps = dispatch => {
 	return ({
 		authorize: (username, password)=> {
 			dispatch(authorize(username, password))
+		},
+		authorizeFB: (fbObject) => {
+			dispatch(authorizeFB(fbObject))
 		}
 	})
 }
 
 export const Login = withRouter(connect(
-	null,
+	mapStateToProps,
 	mappDispatchToProps
 )(LoginUnconnected))
+

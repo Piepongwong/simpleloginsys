@@ -1,3 +1,4 @@
+/* Not Used Local Passport STrategy is used instead */
 const express = require('express');
 const router = express.Router();
 const model = require("../../models/index")

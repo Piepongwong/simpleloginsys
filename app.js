@@ -1,13 +1,13 @@
 require("dotenv").config()
 const express = require("express"),
- app = express(),
- {Pool} = require("pg"),
- bodyParser = require('body-parser')
- model = require("./models/index")
-var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
-
-var cors = require('cors')
+  app = express(),
+  {Pool} = require("pg"),
+  bodyParser = require('body-parser'),
+  model = require("./models/index"),
+  passport = require('passport'),
+  LocalStrategy = require('passport-local').Strategy,
+  FacebookStrategy = require('passport-facebook').Strategy,
+  cors = require('cors')
 
 app.use(cors())
 
@@ -19,14 +19,13 @@ passport.use(new LocalStrategy(
   		else if(!lres) return done(null, false, {message: "incorrect credentials"})
   	})
   }
-));
+))
+
 passport.serializeUser(function(user, done) {
-  console.log("hi")
   done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-	console.log("hi")
   done(err, user);
 });
 
@@ -44,21 +43,12 @@ app.set("PORT", process.env.WEBSERVERPORT)
 
 app.post('/login',
   passport.authenticate('local'), (req, res)=> {
-  		console.log(req.user)
-  		res.send("HOOORAY")
+  		res.json(req.user)
   }
 )
 
 require("./routes/index")(app)
 
-
-// ** Dev only ** //
-
-
-
-app.use("/admin", function (req, res, next) {
-  res.status(403).send("Oeps, it seems you do not belong here")
-})
 
 app.use(function (req, res, next) {
   res.status(404).send("Sorry can't find that!")

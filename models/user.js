@@ -13,7 +13,8 @@ module.exports = (pool)=> {
 				    lastname text COLLATE pg_catalog."default",
 				    email text COLLATE pg_catalog."default",
 				    password text COLLATE pg_catalog."default",
-				    id serial primary key NOT NULL
+				    id serial primary key NOT NULL,
+				    fbid bigint UNIQUE;
 				)`
 				)
 				.catch((err)=> {
@@ -23,8 +24,10 @@ module.exports = (pool)=> {
 		})(pool),
 		exists: (function(pool){
 			return function(usernameOrEmail) {
+				console.log("Check username/email availability", usernameOrEmail)
 				return pool.query(`SELECT * FROM users WHERE username = '${usernameOrEmail}' OR email = '${usernameOrEmail}';`)
 				.then((pres)=> {
+					console.log(pres.rows)
 					if(pres.rows.length > 0) return true
 					else return false
 				})
@@ -42,14 +45,14 @@ module.exports = (pool)=> {
 								RETURNING *;`
 							).then((res)=> {
 								delete res.rows[0].password
-								return res
+								return res.rows[0]
 							})
 							.catch((err)=> {
 								throw err
 							})
 						})		
 					}).catch((err)=> {
-						console.log(err)
+						throw err
 					})			
 			}
 		})(pool),
@@ -69,6 +72,27 @@ module.exports = (pool)=> {
 							})
 						})
 				}	
+		})(pool),
+		fblogin: (function(pool){
+			return function(facebookInfo) {
+				console.log("Logging in with fb-credentials", facebookInfo)
+				return pool.query(`WITH user_row AS (
+						INSERT INTO users (firstname, lastname, email, fbid) 
+						SELECT '${facebookInfo.first_name}', '${facebookInfo.last_name}', '${facebookInfo.email}', '${facebookInfo.id}'
+						WHERE NOT EXISTS (SELECT * FROM users WHERE fbid = ${facebookInfo.id})
+						RETURNING *
+						)
+						SELECT id, username, firstname, lastname, email FROM user_row
+						UNION
+						SELECT id, username, firstname, lastname, email  FROM users WHERE fbid = ${facebookInfo.id}`)
+				.then((pres)=> {
+					console.log(pres.rows)
+					return pres.rows[0]
+				})
+				.catch((err)=> {
+					console.log(err)
+				})
+			}
 		})(pool)
 	}
 }

@@ -13,6 +13,9 @@ module.exports = (app) => {
 	app.use(require("./user/profile"))
 	app.use(require("./user/create"))
 	app.use(require("./user/login"))
+	app.use(require("./user/exists"))
+	app.use(require("./user/fblogincreate"))
+	app.use(require("./user/logout"))
 }
 
 

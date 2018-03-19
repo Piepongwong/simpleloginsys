@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from 'react-redux'
-import {signup} from "../actions/root"
-import { Button, Container, Form, FormGroup, Label, Input, FormText, Row, Col } from 'reactstrap';
+import {signup, emailCheck, usernameCheck} from "../actions/root"
+import { Button, Container, Form, FormGroup, Label, Input, FormText, Row, Col, FormFeedback } from 'reactstrap';
 import { withRouter } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
@@ -19,16 +19,21 @@ class SignupUnconnected extends React.Component {
 		super(props)
 		this.state = {
 			username: "",
+			firstname: "",
+			lastname: "",
+			email: "",
 			password: "",
-			password2: ""
+			password_check: ""
 		}
 		this.handleSubmit = this.handleSubmit.bind(this)
 		this.handleChange = this.handleChange.bind(this)
-		this.checkAvailability = this.checkAvailability.bind(this)
+		this.checkUsernameAvailability = this.checkUsernameAvailability.bind(this)
+		this.checkEmailAvailability = this.checkEmailAvailability.bind(this)
+
 	}
 	handleSubmit(e) {
 		e.preventDefault()		
-		this.props.authorize(this.state.username, this.state.password)
+		this.props.signup(this.state.username, this.state.firstname, this.state.lastname, this.state.email, this.state.password)
 	}
 
 	handleChange(e) {
@@ -36,8 +41,12 @@ class SignupUnconnected extends React.Component {
 		this.setState({[e.target.name]: e.target.value})
 	}
 
-	checkAvailability(e) {
-		console.log("hiii")
+	checkUsernameAvailability(e) {
+		this.props.usernameCheck(e.target.value)
+	}
+
+	checkEmailAvailability(e) {
+		this.props.emailCheck(e.target.value)
 	}
 	render () {
 		return (
@@ -49,7 +58,13 @@ class SignupUnconnected extends React.Component {
 						<Form onSubmit={this.handleSubmit}>
 							<FormGroup >
 					         	<Label for="username">Username</Label>				
-								<Input required onBlur={this.checkAvailability} onChange={this.handleChange} name="username" value={this.state.username} placeholder="username"/>
+								{!this.props.invalidUsername? 
+									<Input required onBlur={this.checkUsernameAvailability} onChange={this.handleChange} name="username" value={this.state.username} placeholder="username"/>:
+									<div>
+										<Input invalid required onBlur={this.checkUsernameAvailability} onChange={this.handleChange} name="username" value={this.state.username} placeholder="username"/>
+										<FormFeedback>Username already exists</FormFeedback>					
+									</div>
+								}
 							</FormGroup>
 							<FormGroup >
 					         	<Label for="firstname">Firstname</Label>				
@@ -60,8 +75,14 @@ class SignupUnconnected extends React.Component {
 								<Input required onChange={this.handleChange} name="lastname" value={this.state.lastname} placeholder="lastname"/>
 							</FormGroup>
 							<FormGroup >
-					         	<Label for="email">Email</Label>				
-								<Input onBlur={this.checkAvailability} onChange={this.handleChange}  type="email" required name="email" value={this.state.email} placeholder="email"/>
+								<Label for="username">Email</Label>				
+								{!this.props.invalidEmail? 
+									<Input required onBlur={this.checkEmailAvailability} onChange={this.handleChange} name="email" value={this.state.email} placeholder="email"/>:
+									<div>
+										<Input type="email" invalid required onBlur={this.checkUsernameAvailability} onChange={this.handleChange} name="email" value={this.state.email} placeholder="email"/>
+										<FormFeedback>Email already exists or invalid</FormFeedback>					
+									</div>
+								}							
 							</FormGroup>
 							<FormGroup >
 					         	<Label for="password">Password</Label>				
@@ -69,7 +90,13 @@ class SignupUnconnected extends React.Component {
 							</FormGroup>								
 							<FormGroup >
 					         	<Label for="password">Password</Label>				
-								<Input required onChange={this.handleChange} name="password2" type="password" value={this.state.password2} placeholder="username or password"/>
+								{this.state.password != this.state.password_check? 
+									<div>
+										<Input invalid required onChange={(this.handleChange)} name="password_check" type="password" value={this.state.password_check} placeholder="username or password"/>
+										<FormFeedback>Passwords do not match</FormFeedback>
+									</div>:
+									<Input required onChange={(this.handleChange)} name="password_check" type="password" value={this.state.password_check} placeholder="username or password"/>						
+								}
 							</FormGroup>								
 							<Button type="submit" value="submit">Submit</Button>											
 						</Form>	
@@ -90,12 +117,26 @@ class SignupUnconnected extends React.Component {
 const mappDispatchToProps = dispatch => {
 	return ({
 		signup: (username, firstname,lastname, email, password, password2)=> {
-			dispatch(signup(username, firstname,lastname, email, password, password2))
+			dispatch(signup(username, firstname,lastname, email, password))
+		},
+		emailCheck: (email) => {
+			dispatch(emailCheck(email))
+		},
+		usernameCheck: (username)=> {
+			dispatch(usernameCheck(username))
 		}
+
 	})
 }
 
+const mapStateToProps = state => {
+  return {
+    invalidEmail: state.signUp.invalidEmail,
+    invalidUsername: state.signUp.invalidUsername
+  }
+}
+
 export const Signup = withRouter(connect(
-	null,
+	mapStateToProps,
 	mappDispatchToProps
 )(SignupUnconnected))
