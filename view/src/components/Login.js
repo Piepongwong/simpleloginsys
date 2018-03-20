@@ -1,13 +1,12 @@
 import React from "react"
 import { connect } from 'react-redux'
 import {authorize, authorizeFB} from "../actions/root"
-import { Button, Container, Form, FormGroup, Label, Input, FormText, Row, Col, FormFeedback} from 'reactstrap'
+import { Button, Form, FormGroup, Label, Input, Row, Col, FormFeedback} from 'reactstrap'
 import FacebookLogin from 'react-facebook-login'
 import { withRouter } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
 const formS = {
-  minHeight: "100%",
   minHeight: "100vh",   
   display: "flex",
   alignItems: "center",

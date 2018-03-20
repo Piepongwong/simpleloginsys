@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from 'react-redux'
 import { withRouter, Redirect} from 'react-router-dom'
-import { HashRouter as Router, Route } from 'react-router-dom'
+import {Route } from 'react-router-dom'
 
 const PrivateRoute = ({component: Component, ...rest, isLoggedIn}) => (
 	<Route {...rest} render={(props)=> (

@@ -19,6 +19,7 @@
     "dotenv": "^5.0.1",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
+    "font-awesome": "^4.7.0",
     "mocha": "^5.0.4",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",

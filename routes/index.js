@@ -9,24 +9,18 @@ const checkAuthorized = function(req, res, next) {
 }
 
 module.exports = (app) => {
-	app.use("/user/profile", checkAuthorized)
-	app.use(require("./user/profile"))
+	app.post('/login',
+	  passport.authenticate('local'), (req, res)=> {
+	  		console.log("User logged in")
+	  		res.json(req.user)
+	  }
+	)	
 	app.use(require("./user/create"))
-	app.use(require("./user/login"))
 	app.use(require("./user/exists"))
 	app.use(require("./user/fblogincreate"))
 	app.use(require("./user/logout"))
+/*	app.use(require("./user/messages"), checkAuthorized) //implement
+*/
+
+
 }
-
-
-
-
-
-/*
-
-https://stackoverflow.com/questions/5778245/expressjs-how-to-structure-an-application
-
-
-http://peter.michaux.ca/articles/mvc-architecture-for-javascript-applications
-
-https://addyosmani.com/largescalejavascript/*/

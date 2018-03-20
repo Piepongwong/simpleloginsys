@@ -1,6 +1,5 @@
-import {AUTHORIZE, IS_AUTHENTICATING, INVALID_LOGIN, LOGGED_IN, INVALID_USERNAME, INVALID_EMAIL, LOGGED_OUT} from "../constants"
+import {AUTHORIZE, INVALID_LOGIN, LOGGED_IN, INVALID_USERNAME, INVALID_EMAIL, LOGGED_OUT} from "../constants"
 import axios from "axios"
-
 import { push} from 'react-router-redux'
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -17,19 +16,6 @@ export const invalidLogin = ()=> {
 	}
 }
 
-export const loggedIn = (user)=> {
-	return {
-		type: LOGGED_IN,
-		user: user
-	}
-}
-
-export const loggedOut = ()=> {
-	return {
-		type: LOGGED_OUT
-	}
-}
-
 export const invalidUsername = (valid)=> {
 	return {
 		type: INVALID_USERNAME,
@@ -43,7 +29,12 @@ export const invalidEmail = (valid)=> {
 		valid
 	}
 }
-
+export const loggedIn = (user)=> {
+	return {
+		type: LOGGED_IN,
+		user: user
+	}
+}
 export const authorize = (usernameOrEmail, password)=> {
 	return dispatch => {
 		dispatch(isAuthenticating())
@@ -111,7 +102,6 @@ export const signup = (username, firstname, lastname, email, password)=> {
 }
 
 export const emailCheck = (email)=> {
-	console.log("The credentials", email)
 	return dispatch => {
 		return axios({
 			url: `${process.env.REACT_APP_BASE_URL}/user/exists`,
@@ -129,7 +119,6 @@ export const emailCheck = (email)=> {
 }
 
 export const usernameCheck = (username)=> {
-	console.log("The credentials", username)
 	return dispatch => {
 		return axios({
 			url: `${process.env.REACT_APP_BASE_URL}/user/exists`,
@@ -146,18 +135,22 @@ export const usernameCheck = (username)=> {
 	}
 }
 
+export const loggedOut = ()=> {
+	return {
+		type: LOGGED_OUT
+	}
+}
+
 export const logout = ()=> {
-	console.log("reached")
 	return dispatch => {
 		return axios({
 			url: `${process.env.REACT_APP_BASE_URL}/user/logout`,
 			method: 'get'
 		})
 		.then((response)=> {
-			console.log("reached2")
 			dispatch(loggedOut())
 		}).catch((err)=> {
-			dispatch(invalidUsername(true))
+			console.log("logging out failed")
 		})
 	}
 }

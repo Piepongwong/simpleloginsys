@@ -10,6 +10,14 @@ const express = require("express"),
   cors = require('cors')
 
 app.use(cors())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json()) 
+app.use(require('cookie-parser')());
+app.use(require('express-session')({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}));
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
@@ -29,30 +37,14 @@ passport.deserializeUser(function(user, done) {
   done(err, user);
 });
 
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json()) 
-app.use(require('cookie-parser')());
-app.use(require('express-session')({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
-}));
 app.use(passport.initialize());
 
 app.set("PORT", process.env.WEBSERVERPORT)
 
-app.post('/login',
-  passport.authenticate('local'), (req, res)=> {
-  		res.json(req.user)
-  }
-)
+
 
 require("./routes/index")(app)
 
-
-app.use(function (req, res, next) {
-  res.status(404).send("Sorry can't find that!")
-})
 app.listen(app.get("PORT"), ()=> {
 	console.log("Listening at", app.get("PORT"))
 })

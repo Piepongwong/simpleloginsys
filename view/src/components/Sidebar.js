@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Badge, Nav, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Collapse, Button} from 'reactstrap';
+import {Nav, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Collapse, Button} from 'reactstrap';
 import classNames from 'classnames';
 import {Link} from "react-router-dom"
 

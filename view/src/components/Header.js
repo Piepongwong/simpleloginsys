@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Badge, Nav, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Collapse, Button} from 'reactstrap';
 import {logout} from "../actions/root"
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -34,7 +33,7 @@ class Header extends Component {  constructor(props) {
     return (
       <header>
         <div onClick={this.toggleSidebar} className="btn btn-default"><a><i className="fa fa-bars fa-2x" style={{color: "white", margin: "2%, flex"}}></i></a></div>
-        <div onClick={this.props.logout}className="btn btn-default" style={{color: "white", padding: "2%"}}><i style={{color: "white", padding: "2%"}} className="fas fa-lock fa-2x"></i>Logout</div>
+        <div onClick={this.props.logout}className="btn btn-default" style={{color: "white", padding: "2%"}}><i style={{color: "white", "marginRight": "4%"}} className="fa fa-lock fa-2x"></i>Logout</div>
       </header>
     );
   }
