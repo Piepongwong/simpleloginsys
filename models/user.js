@@ -93,6 +93,20 @@ module.exports = (pool)=> {
 					console.log(err)
 				})
 			}
-		})(pool)
+		})(pool),
+		count: (function(pool){
+					return function(facebookInfo) {
+						return pool.query(`SELECT COUNT(*) FROM users;`)
+						.then((pres)=> {
+							console.log(pres.rows)
+							return pres.rows[0]
+						})
+						.catch((err)=> {
+							console.log(err)
+						})
+					}
+				})(pool)		
 	}
 }
+
+

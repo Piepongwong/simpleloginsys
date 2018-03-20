@@ -19,6 +19,7 @@ module.exports = (app) => {
 	app.use(require("./user/exists"))
 	app.use(require("./user/fblogincreate"))
 	app.use(require("./user/logout"))
+	app.use(require("./user/count"))
 /*	app.use(require("./user/messages"), checkAuthorized) //implement
 */
 
