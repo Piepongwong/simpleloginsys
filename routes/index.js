@@ -14,7 +14,12 @@ module.exports = (app) => {
 	  		console.log("User logged in")
 	  		res.json(req.user)
 	  }
-	)	
+	)
+	if(process.env.ENVIRONMENT === "production")	{
+		app.get('/', function (req, res) {
+		  res.sendFile(path.join(__dirname, '/view/build', 'index.html'));
+		})
+	}
 	app.use(require("./user/create"))
 	app.use(require("./user/exists"))
 	app.use(require("./user/fblogincreate"))

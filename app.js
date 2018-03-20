@@ -7,7 +7,8 @@ const express = require("express"),
   passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy,
   FacebookStrategy = require('passport-facebook').Strategy,
-  cors = require('cors')
+  cors = require('cors'),
+  path = require('path')
 
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -18,6 +19,9 @@ app.use(require('express-session')({
     resave: false,
     saveUninitialized: false
 }));
+
+app.use(express.static(path.join(__dirname, '/view/build')));
+
 
 passport.use(new LocalStrategy(
   function(username, password, done) {

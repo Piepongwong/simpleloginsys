@@ -11,9 +11,9 @@ WEBSERVERPORT=
 FBAPPSECRET=
 FBAPPID=
 BASEURL=
+ENVIRONMENT=
 `
-
-Go [Facebook for Developers](https://developers.facebook.com/) to get an App-id and an Appsecret. Make sure to add the domain on which this app is hosted. If you are running this app locally, make sure to pair the domain to your local ip address. Otherwise fb will deny access. Example:
+If `ENVIRONMENT` is set to production, the react ui is served by the express server instead of by a separate dev server. The static build can be found is located in: /view/build/index.html. Go to [Facebook for Developers](https://developers.facebook.com/) to get an App-id and an Appsecret. Make sure to add the domain on which this app is hosted. If you are running this app locally, make sure to pair the domain to your local ip address. Otherwise FB will deny access. Example:
 
 `/etc/hosts
 127.0.0.1 example.domain.com`
@@ -24,3 +24,5 @@ The second .env file should be in the view directory. It needs the following var
 `
 
 This is the url that the express server is listening on. It should include the port if it differs from 80.
+
+Your can run the react app and the backend locally by running `npm start-all` in the root directory. You can also run them separate by running npm start in their respective directories. Set ENVIRONMENT to production, run npm build in /view and use pm2 or any other process manager to run the app in production.
