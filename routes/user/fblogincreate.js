@@ -6,23 +6,24 @@ router.post("/user/fblogincreate", (req, res)=> {
 	console.log(req.body.first_name)
 
 
-/*	if(req.body.usernameOrEmail == null || req.body.password == null) {
+	if(req.body.first_name == null || req.body.last_name == null || req.body.id == null) {
 		res.status(401).send("invalid credentials")
 		return
-	}*/
-	model.user.fblogin({
-		first_name: req.body.first_name, 
-		last_name: req.body.last_name, 
-		id: req.body.id, 
-		email: req.body.email})
-	.then((lres)=> {
-		if(lres) {
-			console.log("FB login successfull")
-			res.status(200).json(lres)
-		} else {
-			res.status(401).send("wrong credentials")
-		}
-	})
+	} else {
+		model.user.fblogin({
+			first_name: req.body.first_name, 
+			last_name: req.body.last_name, 
+			id: req.body.id, 
+			email: req.body.email})
+		.then((lres)=> {
+			if(lres) {
+				console.log("FB login successfull")
+				res.status(200).json(lres)
+			} else {
+				res.status(401).send("wrong credentials")
+			}
+		})		
+	}
 })
 
 module.exports = router

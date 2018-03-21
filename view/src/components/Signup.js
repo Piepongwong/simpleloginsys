@@ -78,19 +78,19 @@ class SignupUnconnected extends React.Component {
 									<Input required onBlur={this.checkEmailAvailability} onChange={this.handleChange} name="email" value={this.state.email} placeholder="email"/>:
 									<div>
 										<Input type="email" invalid required onBlur={this.checkUsernameAvailability} onChange={this.handleChange} name="email" value={this.state.email} placeholder="email"/>
-										<FormFeedback>Email already exists or invalid</FormFeedback>					
+										<FormFeedback>Email already exists</FormFeedback>					
 									</div>
 								}							
 							</FormGroup>
 							<FormGroup >
 					         	<Label for="password">Password</Label>				
-								<Input required onChange={this.handleChange} name="password" type="password" value={this.state.password} placeholder="username or password"/>
+								<Input required onChange={this.handleChange} name="password" type="password" value={this.state.password} placeholder="password"/>
 							</FormGroup>								
 							<FormGroup >
-					         	<Label for="password">Password</Label>				
+					         	<Label for="password">Password confirm</Label>				
 								{this.state.password !== this.state.password_check? 
 									<div>
-										<Input invalid required onChange={(this.handleChange)} name="password_check" type="password" value={this.state.password_check} placeholder="username or password"/>
+										<Input invalid required onChange={(this.handleChange)} name="password_check" type="password" value={this.state.password_check} placeholder="password"/>
 										<FormFeedback>Passwords do not match</FormFeedback>
 									</div>:
 									<Input required onChange={(this.handleChange)} name="password_check" type="password" value={this.state.password_check} placeholder="username or password"/>						

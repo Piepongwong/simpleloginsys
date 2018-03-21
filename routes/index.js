@@ -20,6 +20,8 @@ module.exports = (app) => {
 		  res.sendFile(path.join(__dirname, '/view/build', 'index.html'));
 		})
 	}
+	app.use(require("./user/passwordreset"))
+	app.use(require("./user/checkpasswordreset"))
 	app.use(require("./user/create"))
 	app.use(require("./user/exists"))
 	app.use(require("./user/fblogincreate"))

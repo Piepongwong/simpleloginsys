@@ -3,10 +3,15 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
 const UserUnconnected = ({session})=>  (
-		<main className="content sidebar-hidden">
-			<h1> Firstname: {session.firstname}</h1>
-			<h1> Lastname: {session.lastname}</h1>
-			<h1> Email: {session.email}</h1>
+		<main className="content sidebar-hidden text-center">
+
+			<div className="card  w-100">
+			  <div className="card-body">
+				<p> Firstname: {session.firstname}</p>
+				<p> Lastname: {session.lastname}</p>
+				<p> Email: {session.email}</p>			  
+			</div>
+			</div>			
 		</main>						
 	)
 

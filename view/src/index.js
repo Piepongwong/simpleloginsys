@@ -4,7 +4,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import {Login} from "./components/Login"
 import {Signup} from "./components/Signup"
 import Profile from "./components/Profile"
+import {ChooseNewPassword} from "./components/ChooseNewPassword"
 import {PrivateRoute} from "./components/PrivateRoute"
+import {ResetPassword} from "./components/ResetPassword"
 import registerServiceWorker from './registerServiceWorker';
 import {createStore, applyMiddleware} from "redux"
 import rootReducer from "./reducers/root"
@@ -41,6 +43,9 @@ ReactDOM.render(
 	     		 <Route exact path="/login" component={Login} />
 	     		 <Route exact path="/signup" component={Signup} />
 	     		 <PrivateRoute path="/profile" component={Profile} />
+				<Route  path="/choosenewpassword/:token" component={ChooseNewPassword} />	     	
+				<Route  path="/resetpassword" component={ResetPassword} />	     		 
+
 	     	</div>	 
     	</ConnectedRouter>
     </Router>	

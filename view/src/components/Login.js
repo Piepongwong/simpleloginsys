@@ -48,6 +48,7 @@ class LoginUnconnected extends React.Component {
 						<FormGroup >
 							<Label for="password">Password</Label>
 							<Input required onChange={this.handleChange} name="password" type="password" value={this.state.password} placeholder="password"/>	
+							<Link  style={{ textDecoration: 'none', fontSize: "0.7em" }} className="w-50 text-center" to="/resetpassword">Forgot password? </Link>	
 						</FormGroup>
 						<FormGroup>
 							{this.props.invalidLogin?
@@ -55,11 +56,10 @@ class LoginUnconnected extends React.Component {
 								<Input invalid className="w-50 btn btn-secondary" type="submit" value="submit"/>
 								<FormFeedback>Wrong username or password</FormFeedback>
 							</div>:
-								<Input className="w-50 btn btn-secondary" type="submit" value="submit"/>
+								<Input disabled={!this.state.username || !this.state.password} className="w-50 btn btn-secondary" type="submit" value="submit"/>
 							}
 						</FormGroup>
 					</Form>
-					<p className="p-2 mb-0"> or</p>
 					<FacebookLogin style={{backgroundColor: "blue"}} cssClass={"kep-login-facebook btn w-100 m5"}
 						appId="411672582610628"
 						autoLoad="true"
@@ -73,7 +73,7 @@ class LoginUnconnected extends React.Component {
 							<p className="pl-2 mb-3">No account?</p>
 							<Link to="/signup"><Button className="w-100 m4">Sign up </Button></Link>
 						</Col>
-					</Row>					
+					</Row>										
 				</Col>
 			</Row>
 			</div>

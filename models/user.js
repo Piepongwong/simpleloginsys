@@ -1,7 +1,8 @@
-var bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+var jwt = require('jsonwebtoken');
 
 module.exports = (pool)=> {
-	
 	return {
 		init: (function(pool) {
 			console.log("User model initialized")
@@ -46,8 +47,7 @@ module.exports = (pool)=> {
 							).then((res)=> {
 								delete res.rows[0].password
 								return res.rows[0]
-							})
-							.catch((err)=> {
+							}).catch((err)=> {
 								throw err
 							})
 						})		
@@ -105,8 +105,69 @@ module.exports = (pool)=> {
 							console.log(err)
 						})
 					}
-				})(pool)		
+				})(pool),
+		sendPasswordReset: (function(pool){
+					return function(usernameOrEmail) {
+						return pool.query(`SELECT email FROM users where email='${usernameOrEmail}' or username='${usernameOrEmail}';`)
+						.then((pres)=> {
+							if(pres.rows[0] === undefined) throw "username or email does not exists"
+							else {
+								let email = pres.rows[0].email
+								let token = jwt.sign({
+	  							exp: Math.floor(Date.now() / 1000) + (60 * 60),
+	  							email: email
+								}, process.env.JWTSECRET)
+
+							 	let mailOptions ={
+							        from: '"Simplelogin" <simple@login.com>', // sender address
+							        to: email, // list of receivers
+							        subject: "Password reset simple login", // Subject line
+							        html: `Please click  the link to reset your password <a href="${process.env.REACTAPPBASEURL}/choosenewpassword/${token}"> Reset password </a>`// html body
+							    }
+
+							    transporter.sendMail(mailOptions, (error, info) => {
+							        if (error) {
+							            return console.log(error);
+							        }
+							        console.log('Message sent: %s', info.messageId);
+							        // Preview only available when sending through an Ethereal account
+							        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+							    });									
+							}
+						})
+					}
+				})(pool),
+		checkPasswordReset: (function(pool){
+					return function(token, password) {
+						jwt.verify(token, process.env.JWTSECRET, function(err, decoded) {
+						  if(err) throw "Invalid token"
+						  else {
+							return bcrypt.hash(password, 10).then((hash)=> {
+							 return pool.query(`UPDATE users SET password = '${hash}' WHERE email='${decoded.email}' RETURNING *;`) 
+								.then((pres)=> {
+									if(pres.rows[0] == undefined) throw "User not found"
+									return pres.rows[0]
+								})
+								.catch((err)=> {
+									console.log(err)
+								})
+							})
+						  }
+						})
+					}
+				})(pool)					
 	}
 }
 
+const transporter = nodemailer.createTransport({
+        tls: { rejectUnauthorized: false },        
+        host: process.env.EMAILHOST,
+        port: process.env.EMAILPORT,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: process.env.EMAIL, 
+            pass: process.env.EMAILPASSWORD 
+        }
+    });
+   
 
