@@ -5,7 +5,6 @@ var jwt = require('jsonwebtoken');
 module.exports = (pool)=> {
 	return {
 		init: (function(pool) {
-			console.log("User model initialized")
 			return ()=> {
 				pool.query(`CREATE TABLE IF NOT EXISTS public.users
 				(
@@ -18,6 +17,9 @@ module.exports = (pool)=> {
 				    fbid bigint UNIQUE;
 				)`
 				)
+				.then(()=> {
+					console.log("User model initialized")
+				})
 				.catch((err)=> {
 					throw err
 				})					

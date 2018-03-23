@@ -1,6 +1,6 @@
-# Simple log in system with Reacct and nodeJs
+# Simple log in system with React and nodeJs
 
-This is a log in system build with express, postgresql, nodemailer, react, reactstrap, redux and react-router v4. It includes email checking, username checking and a forgot password option. I included some chartjs graphs to spice up the design, but they are not connected to the database.
+This is a log in system build with express, postgresql, nodemailer, react, reactstrap, redux and react-router v4. It includes email checking, username checking and a forgot password option. I included some chartjs graphs to spice up the design, but they are not connected to the database.=
 
 ## Setup 
 To run first install postgresql and the npm dependencies. Afterwards *two* .env files need to be created. One in the root directory and one in the view directory. The .env file in the root directory needs the following variables:

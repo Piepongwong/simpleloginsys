@@ -15,7 +15,7 @@ module.exports = (app) => {
 	  		res.json(req.user)
 	  }
 	)
-	if(process.env.ENVIRONMENT === "production")	{
+	if(process.env.ENVIRONMENT === "PRODUCTION")	{
 		app.get('/', function (req, res) {
 		  res.sendFile(path.join(__dirname, '/view/build', 'index.html'));
 		})
